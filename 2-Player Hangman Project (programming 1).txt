@@ -1,0 +1,166 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include<ctime>
+#include <cstdlib>
+
+
+using namespace std;
+
+
+int lives=5;
+const int *life = &lives;
+
+//Format************************************************************************
+enum position {left, center, right};
+
+void format(position pos, string s, int linelength)
+{
+    int spaces=0;
+
+    center: spaces = (linelength - s.size()) / 2;
+
+    if (spaces>0)
+    {
+        cout<<string (spaces, ' ');
+        cout<<s<<endl;
+    }
+}
+//**********************************************************************************************************************
+
+int main() {
+
+    int redo=0;
+    char letter, words;
+    string word;
+
+    string answer = word;
+
+    int game_blanks(char, string, string &);
+
+//Title*****************************************************************************************************************
+    int instructions;
+    const int linelength = 120;
+    string header(linelength, '=');
+
+
+    cout << header << endl;
+
+
+    format(center, "Hangman\n", linelength);
+
+
+    format(center, "enter '0' to continue\n", linelength);
+    cout << header << endl;
+
+
+    cin >> instructions;
+
+
+
+
+//Instructions**********************************************************************************************************
+
+
+    format(center, "Please Note:", linelength);
+    format(center, "This is a 2-player adaptation of the hangman game", linelength);
+    format(center, "INSTRUCTIONS:", linelength);
+    format(center, "One player is intended to pick a word without the 2nd player knowing.", linelength);
+    format(center, "(there is no randomized word-bank)\n", linelength);
+
+
+    format(center, "enter '0' to play\n", linelength);
+
+
+    cout << header << endl;
+
+
+    int start;
+
+
+    cin >> start;
+
+
+//Game**************************************************************************
+
+    for (int redo = 0; redo != 1;) {
+
+        int lives = 5;
+
+
+        format(center, "Input your word\n\n", linelength);
+
+//Hide Words********************************************************************
+        cin>>word;
+
+        answer = word;
+
+        string hidden(word.length(), '_');
+
+
+        cout << endl << endl << endl << endl << endl << endl << endl << endl;
+        cout << "You have " << *life << " lives left.\n" << endl;
+        cout << "Your Word: " << hidden << endl;
+//******************************************************************************
+
+        while (lives >= 0) {
+            cout << endl<<header<<endl;
+            cout << "\n\nInput a letter: ";
+            cin >> letter;
+
+//reveal****************************************************************************************************************
+            if (game_blanks(letter, word, hidden) == 0) {
+                cout << endl << "incorrect guess." << endl;
+                lives--;
+            } else {
+                cout << endl << "correct guess." << endl;
+                cout << endl << hidden << endl << endl;
+            }
+
+
+            cout << "You have " << lives << " guesses left.\n" << endl;
+
+            if (word == hidden) {
+                cout << word << endl;
+                cout << "Yeah! You got it!";
+                break;
+            }
+        }
+        if (lives == -1) {
+            cout<<"you lost.\n\nYour word was: "<<word;
+        }
+        cout << endl<<header<<endl<<endl;
+        format(center, "Would you like to play again?\n\n", linelength);
+        format(center, "'0' to play again, '1' to end", linelength);
+        cin>>redo;
+        if (redo == 1){
+            cout<<endl<<header<<endl<<endl;
+            format(center, "Thank You For Playing!", linelength);
+
+        }
+        }
+    }
+
+
+//Game_Blanks*******************************************************************
+
+int game_blanks (char guess, string secretword, string &guessword)
+{
+    int i;
+    int matches=0;
+    int len=secretword.length();
+    for (i = 0; i< len; i++)
+    {
+        // Did we already match this letter in a previous guess?
+        if (guess == guessword[i])
+            return 0;
+        // Is the guess in the secret word?
+        if (guess == secretword[i])
+        {
+            guessword[i] = guess;
+            matches++;
+        }
+    }
+    return matches;
+
+}
